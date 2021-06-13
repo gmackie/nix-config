@@ -23,4 +23,5 @@ if [ ! -e "/run/systemd.pid" ]; then
 fi
 
 userShell=$($sw/getent passwd @defaultUser@ | $sw/cut -d: -f7)
+exportCmd="export VSCODE_WSL_EXT_LOCATION=\"$VSCODE_WSL_EXT_LOCATION\""
 exec $sw/nsenter -t $(< /run/systemd.pid) -p -m --wd="$PWD" -- @wrapperDir@/su -s $userShell @defaultUser@ "$@"

@@ -57,6 +57,7 @@ in
     curl
     zsh
     git
+    gh
     htop
     pv
     killall
@@ -69,7 +70,15 @@ in
     
     nmap
     docker
+    docker-compose
+    cri-tools
+    kubernetes-helm
+    devd
+    heroku
+    mongodb-tools
     jq
+    dotnet-sdk
+    dotnet-netcore
     aspell
     silver-searcher
     sqlite
@@ -84,9 +93,11 @@ in
     
     python39
     nodejs
+    yarn
     ruby
     glibc
     weechat
+
   ];
 
   services.openssh.enable = true;
