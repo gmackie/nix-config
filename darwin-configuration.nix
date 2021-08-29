@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
 
+#imports = [ <home-manager/nix-darwin> ];
+
 let
 
   coverage = pkgs.vimUtils.buildVimPlugin {
@@ -22,10 +24,14 @@ let
     };
   };
 
-  python-with-global-packages = pkgs.python3.withPackages(ps: with ps; [
-    pip
-    botocore
-  ]);
+  # python-with-global-packages = pkgs.python3.withPackages(ps: with ps; [
+  #   numpy
+  #   plotly
+  #   matplotlib
+  #   requests
+  #   pip
+  #   botocore
+  # ]);
 
 in
 
@@ -36,7 +42,7 @@ in
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     [
-      python-with-global-packages
+      # python-with-global-packages
       pkgs.asciinema
       pkgs.awscli
       pkgs.docker
@@ -56,6 +62,8 @@ in
       pkgs.nodejs
       pkgs.nodePackages.typescript
       pkgs.nodePackages.serverless
+      pkgs.python3
+      pkgs.python3.pkgs.pip
       pkgs.ripgrep
       pkgs.terraform
       pkgs.tmux
@@ -64,6 +72,7 @@ in
       pkgs.vscode
       pkgs.wget
       pkgs.yarn
+      pkgs.youtube-dl
       pkgs.zip
       (
 	 pkgs.neovim.override {
@@ -87,6 +96,7 @@ in
 		  ultisnips #SirVer/ultisnips
 		  vim-snippets #honza/vim-snippets
 		  easygrep #dkprice/vim-easygrep
+		  molokai
 		];
 		opt = [];
 	      };
