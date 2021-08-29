@@ -62,6 +62,7 @@ in
       pkgs.nodejs
       pkgs.nodePackages.typescript
       pkgs.nodePackages.serverless
+      pkgs.python38Packages.pygments
       pkgs.python3
       pkgs.python3.pkgs.pip
       pkgs.ripgrep
