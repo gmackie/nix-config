@@ -10,9 +10,6 @@ name:
 }:
 
 let
-  machineConfig = ../hosts/${name}/configuration.nix;
-  userConfig = ../home/${user}/${if darwin then "darwin" else "nixos"}.nix;
-  
   systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   homeManagerModule = if darwin then inputs.home-manager.darwinModules.home-manager else inputs.home-manager.nixosModules.home-manager;
 in
@@ -25,7 +22,7 @@ systemFunc rec {
   };
   
   modules = [
-    machineConfig
+    (../hosts + "/${name}/configuration.nix")
     homeManagerModule
     {
       home-manager = {
@@ -35,7 +32,7 @@ systemFunc rec {
           inherit inputs user;
           hostname = name;
         };
-        users.${user} = userConfig;
+        users.${user} = import (../home + "/${user}/${if darwin then "darwin" else "nixos"}.nix");
       };
     }
     {
