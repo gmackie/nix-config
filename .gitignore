@@ -1,0 +1,25 @@
+# Nix
+result
+result-*
+
+# Hardware configuration (machine-specific)
+hosts/*/hardware-configuration.nix
+
+# Secrets
+*.secret
+*.key
+*.pem
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
+.direnv/
