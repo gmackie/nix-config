@@ -42,6 +42,12 @@
           user = "mackieg";
         };
         
+        # ThinkPad T440 configuration (hostname: brnr)
+        brnr = mkSystem "brnr" {
+          system = "x86_64-linux";
+          user = "mackieg";
+        };
+        
         # WSL NixOS configuration
         wsl = mkSystem "wsl" {
           system = "x86_64-linux";
