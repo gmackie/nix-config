@@ -1,6 +1,6 @@
 # Multi-System Nix Configuration
 
-A modular, flake-based Nix configuration for managing multiple systems including NixOS, macOS (via nix-darwin), and WSL.
+A modular, flake-based Nix configuration for managing multiple systems including NixOS, macOS (via nix-darwin), and WSL. Includes comprehensive dotfiles management with git submodules for complex configurations.
 
 ## Structure
 
@@ -18,9 +18,15 @@ A modular, flake-based Nix configuration for managing multiple systems including
 │   └── shared/            # Shared modules (cross-platform)
 ├── home/                  # User home configurations
 │   └── mackieg/           # User-specific configs
-│       ├── common.nix     # Shared home config
+│       ├── common.nix     # Shared home config (includes dotfiles)
 │       ├── nixos.nix      # Linux-specific home config
 │       └── darwin.nix     # macOS-specific home config
+├── dotfiles/              # Dotfiles management
+│   ├── config/nvim/       # Neovim config (git submodule)
+│   ├── oh-my-zsh/         # Oh My Zsh (git submodule)
+│   ├── p10k.zsh           # Powerlevel10k configuration
+│   ├── screenrc           # GNU Screen config
+│   └── taskrc             # Taskwarrior config
 ├── overlays/              # Custom package overlays
 ├── pkgs/                  # Custom packages
 └── lib/                   # Helper functions
@@ -76,6 +82,10 @@ nix-collect-garbage -d
 
 # Optimize store
 nix-store --optimize
+
+# Manage dotfiles submodules
+./scripts/dotfiles.sh update   # Update submodules
+./scripts/dotfiles.sh status   # Check status
 ```
 
 ## Adding New Systems
@@ -98,6 +108,7 @@ To add a new system (e.g., Raspberry Pi):
 - **Multi-Platform**: Support for NixOS, macOS, and WSL
 - **Home Manager**: Declarative user environment management
 - **Flakes**: Reproducible builds with pinned dependencies
+- **Dotfiles Integration**: Git submodules for complex configs, Nix for simple ones
 - **Organized Structure**: Clear separation of concerns
 
 ## Customization

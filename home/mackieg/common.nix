@@ -7,35 +7,90 @@
   # Git configuration
   programs.git = {
     enable = true;
-    userName = "Mackie G";
-    userEmail = "mackieg@example.com"; # Update with your email
+    userName = "gmackie";
+    userEmail = "graham.mackie@gmail.com";
     
     extraConfig = {
-      init.defaultBranch = "main";
-      pull.rebase = true;
-      push.autoSetupRemote = true;
-      core.editor = "vim";
+      # Core settings
+      core = {
+        editor = "nvim";
+        excludesfile = "~/.gitignore_global";
+      };
       
+      # Color settings
+      color = {
+        ui = "always";
+        branch = "always";
+        diff = "always";
+        interactive = "always";
+        status = "always";
+      };
+      
+      # Merge and diff settings
+      merge = {
+        tool = "nvim";
+        conflictStyle = "zdiff3";
+      };
       diff = {
         colorMoved = "default";
         algorithm = "histogram";
       };
       
-      merge = {
-        conflictStyle = "zdiff3";
+      # Pull/push settings
+      pull.rebase = true;
+      push = {
+        autoSetupRemote = true;
+        default = "simple";
+      };
+      
+      # Init settings
+      init.defaultBranch = "main";
+      
+      # Pager settings
+      pager.branch = false;
+      
+      # Git LFS
+      filter.lfs = {
+        clean = "git-lfs clean -- %f";
+        smudge = "git-lfs smudge -- %f";
+        process = "git-lfs filter-process";
+        required = true;
       };
     };
     
     aliases = {
+      # From your dotfiles
+      gits = "git status && git branch -vv";
+      gitt = "git log --color --graph --pretty=format:'%Cred%h%Creset-%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --decorate --branches";
+      
+      # Standard aliases
       st = "status";
       co = "checkout";
       br = "branch";
       ci = "commit";
       lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
     };
+    
+    ignores = [
+      ".DS_Store"
+      "*.swp"
+      "*.swo"
+      "*~"
+      ".vscode/"
+      ".idea/"
+      "result"
+      "result-*"
+      ".direnv/"
+      ".env"
+      ".env.local"
+      "node_modules/"
+      "target/"
+      "build/"
+      "dist/"
+    ];
   };
   
-  # Zsh configuration
+  # Zsh configuration with Powerlevel10k
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -48,24 +103,73 @@
       ignoreDups = true;
       ignoreSpace = true;
       share = true;
+      expireDuplicatesFirst = true;
+      extended = true;
     };
     
+    # Environment variables from your dotfiles
+    sessionVariables = {
+      TERM = "xterm-256color";
+    };
+    
+    # Shell options from your dotfiles
+    defaultKeymap = "emacs";
+    
     initExtra = ''
-      # Custom zsh configuration
+      # Powerlevel10k instant prompt
+      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+      fi
+      
+      # Zsh options from your dotfiles
+      setopt COMPLETE_IN_WORD
       setopt HIST_EXPIRE_DUPS_FIRST
       setopt HIST_IGNORE_DUPS
       setopt HIST_IGNORE_ALL_DUPS
       setopt HIST_IGNORE_SPACE
       setopt HIST_FIND_NO_DUPS
       setopt HIST_SAVE_NO_DUPS
+      setopt EXTENDED_HISTORY
+      setopt SHARE_HISTORY
       
       # Better completion
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
       zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
       zstyle ':completion:*' menu select
+      zstyle ':completion:*' group-name ""
+      zstyle ':completion:*:descriptions' format '%B%d%b'
+      zstyle ':completion:*:warnings' format 'No matches for: %d'
+      zstyle ':completion:*' verbose yes
+      zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+      
+      # Custom completion paths
+      fpath=(~/.zsh/completion $fpath)
+      autoload -Uz compinit && compinit -i
+      
+      # NVM setup (if exists)
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+      
+      # Load p10k config
+      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+      
+      # Custom keybindings
+      bindkey '^[[1;5C' forward-word
+      bindkey '^[[1;5D' backward-word
+      bindkey '^H' backward-kill-word
+      bindkey '^[[3;5~' kill-word
+      
+      # PATH additions from your dotfiles
+      export PATH="$HOME/bin:$HOME/.cargo/bin:$HOME/.rbenv/bin:$HOME/.local/bin:$HOME/fpga-toolchain/bin:$HOME/.dotnet:$PATH"
     '';
     
     shellAliases = {
+      # From your dotfiles
+      gits = "git status && git branch -vv";
+      gitt = "git log --color --graph --pretty=format:'%Cred%h%Creset-%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --decorate --branches";
+      
+      # Enhanced commands
       ll = "eza -la";
       la = "eza -a";
       ls = "eza";
@@ -77,7 +181,7 @@
       top = "btop";
       du = "dust";
       
-      # Git aliases
+      # Git shortcuts
       g = "git";
       gs = "git status";
       ga = "git add";
@@ -87,7 +191,7 @@
       gd = "git diff";
       gco = "git checkout";
       
-      # Nix aliases
+      # Nix shortcuts
       nrs = "sudo nixos-rebuild switch --flake .#";
       nrb = "sudo nixos-rebuild build --flake .#";
       hms = "home-manager switch --flake .#";
@@ -95,14 +199,14 @@
       nfc = "nix flake check";
       nfs = "nix flake show";
       
-      # Docker aliases
+      # Docker shortcuts
       d = "docker";
       dc = "docker-compose";
       dps = "docker ps";
       dpa = "docker ps -a";
       di = "docker images";
       
-      # Kubernetes aliases
+      # Kubernetes shortcuts
       k = "kubectl";
       kgp = "kubectl get pods";
       kgs = "kubectl get svc";
@@ -111,33 +215,18 @@
       kdel = "kubectl delete";
       klog = "kubectl logs";
     };
+    
+    plugins = [
+      {
+        name = "powerlevel10k";
+        src = pkgs.zsh-powerlevel10k;
+        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+      }
+    ];
   };
   
-  # Starship prompt
-  programs.starship = {
-    enable = true;
-    settings = {
-      format = ''
-        [╭─](bold green)$username$hostname$directory$git_branch$git_status$cmd_duration
-        [╰─](bold green)$character
-      '';
-      
-      username = {
-        show_always = true;
-        format = "[$user]($style) in ";
-      };
-      
-      hostname = {
-        ssh_only = false;
-        format = "on [$hostname]($style) ";
-      };
-      
-      character = {
-        success_symbol = "[❯](bold green)";
-        error_symbol = "[❯](bold red)";
-      };
-    };
-  };
+  # Powerlevel10k config file
+  home.file.".p10k.zsh".source = ../dotfiles/p10k.zsh;
   
   # Direnv
   programs.direnv = {
@@ -198,30 +287,22 @@
     '';
   };
   
-  # Neovim
+  # Neovim configuration
   programs.neovim = {
     enable = true;
     vimAlias = true;
     viAlias = true;
-    
-    plugins = with pkgs.vimPlugins; [
-      vim-nix
-      vim-fugitive
-      nerdtree
-      fzf-vim
-      coc-nvim
-      vim-airline
-      vim-airline-themes
-      gruvbox-material
-    ];
+    vimdiffAlias = true;
     
     extraConfig = ''
+      " Basic settings
       set number
       set relativenumber
       set expandtab
       set tabstop=2
       set shiftwidth=2
       set smartindent
+      set autoindent
       set wrap
       set ignorecase
       set smartcase
@@ -229,21 +310,354 @@
       set incsearch
       set termguicolors
       set scrolloff=8
+      set sidescrolloff=8
       set signcolumn=yes
-      set updatetime=50
+      set updatetime=250
+      set timeoutlen=300
+      set completeopt=menuone,noselect
+      set undofile
+      set splitbelow
+      set splitright
       
-      colorscheme gruvbox-material
-      
+      " Leader key
       let mapleader = " "
+      let maplocalleader = " "
       
-      " NERDTree
-      nnoremap <leader>n :NERDTreeToggle<CR>
+      " Basic keymaps
+      nnoremap <Esc> <cmd>nohlsearch<CR>
+      nnoremap <leader>q <cmd>quit<CR>
+      nnoremap <leader>w <cmd>write<CR>
       
-      " FZF
-      nnoremap <leader>f :Files<CR>
-      nnoremap <leader>g :Rg<CR>
-      nnoremap <leader>b :Buffers<CR>
+      " Better up/down
+      nnoremap j gj
+      nnoremap k gk
+      
+      " Move to window using the <ctrl> hjkl keys
+      nnoremap <C-h> <C-w><C-h>
+      nnoremap <C-l> <C-w><C-l>
+      nnoremap <C-j> <C-w><C-j>
+      nnoremap <C-k> <C-w><C-k>
+      
+      " Resize with arrows
+      nnoremap <C-Up> :resize +2<CR>
+      nnoremap <C-Down> :resize -2<CR>
+      nnoremap <C-Left> :vertical resize -2<CR>
+      nnoremap <C-Right> :vertical resize +2<CR>
+      
+      " Move text up and down
+      nnoremap <A-j> :m .+1<CR>==
+      nnoremap <A-k> :m .-2<CR>==
+      inoremap <A-j> <Esc>:m .+1<CR>==gi
+      inoremap <A-k> <Esc>:m .-2<CR>==gi
+      vnoremap <A-j> :m '>+1<CR>gv=gv
+      vnoremap <A-k> :m '<-2<CR>gv=gv
+      
+      " Better indenting
+      vnoremap < <gv
+      vnoremap > >gv
+      
+      " Diagnostic keymaps
+      nnoremap [d <cmd>lua vim.diagnostic.goto_prev()<CR>
+      nnoremap ]d <cmd>lua vim.diagnostic.goto_next()<CR>
+      nnoremap <leader>e <cmd>lua vim.diagnostic.open_float()<CR>
+      nnoremap <leader>lq <cmd>lua vim.diagnostic.setloclist()<CR>
+      
+      " LSP keymaps (will be set up by LSP)
+      " See `:help vim.lsp.*` for documentation
     '';
+    
+    extraLuaConfig = ''
+      -- Set highlight on search, but clear on pressing <Esc> in normal mode
+      vim.opt.hlsearch = true
+      vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+      
+      -- Diagnostic configuration
+      vim.diagnostic.config({
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+        },
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+        float = {
+          source = "always",
+          border = "rounded",
+        },
+      })
+      
+      -- LSP settings
+      local on_attach = function(_, bufnr)
+        local nmap = function(keys, func, desc)
+          if desc then
+            desc = 'LSP: ' .. desc
+          end
+          vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+        end
+        
+        nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+        nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+        nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+        nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+        nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+        nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+        nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+        nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+        nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+        nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+        nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+        nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+        nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+        nmap('<leader>wl', function()
+          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, '[W]orkspace [L]ist Folders')
+      end
+      
+      -- Mason and LSP setup would go here
+      local servers = {
+        lua_ls = {
+          Lua = {
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
+          },
+        },
+        nil_ls = {},
+        gopls = {},
+        pyright = {},
+        rust_analyzer = {},
+        tsserver = {},
+      }
+      
+      -- Completion setup
+      local cmp = require('cmp')
+      local luasnip = require('luasnip')
+      require('luasnip.loaders.from_vscode').lazy_load()
+      luasnip.config.setup {}
+      
+      cmp.setup {
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert {
+          ['<C-n>'] = cmp.mapping.select_next_item(),
+          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+          },
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_locally_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.locally_jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+        },
+        sources = {
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+          { name = 'path' },
+          { name = 'buffer' },
+        },
+      }
+      
+      -- Telescope setup
+      require('telescope').setup {
+        defaults = {
+          mappings = {
+            i = {
+              ['<C-u>'] = false,
+              ['<C-d>'] = false,
+            },
+          },
+        },
+      }
+      
+      -- Enable telescope fzf native, if installed
+      pcall(require('telescope').load_extension, 'fzf')
+      
+      -- Telescope keymaps
+      local builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      
+      -- Harpoon setup
+      local mark = require("harpoon.mark")
+      local ui = require("harpoon.ui")
+      
+      vim.keymap.set("n", "<leader>a", mark.add_file, { desc = "Harpoon: Add file" })
+      vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu, { desc = "Harpoon: Quick menu" })
+      
+      vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end, { desc = "Harpoon: File 1" })
+      vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end, { desc = "Harpoon: File 2" })
+      vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end, { desc = "Harpoon: File 3" })
+      vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end, { desc = "Harpoon: File 4" })
+      
+      -- Tree-sitter configuration
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'nix' },
+        auto_install = false,
+        highlight = { enable = true },
+        indent = { enable = true },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = '<c-space>',
+            node_incremental = '<c-space>',
+            scope_incremental = '<c-s>',
+            node_decremental = '<M-space>',
+          },
+        },
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ['aa'] = '@parameter.outer',
+              ['ia'] = '@parameter.inner',
+              ['af'] = '@function.outer',
+              ['if'] = '@function.inner',
+              ['ac'] = '@class.outer',
+              ['ic'] = '@class.inner',
+            },
+          },
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              [']m'] = '@function.outer',
+              [']]'] = '@class.outer',
+            },
+            goto_next_end = {
+              [']M'] = '@function.outer',
+              [']['] = '@class.outer',
+            },
+            goto_previous_start = {
+              ['[m'] = '@function.outer',
+              ['[['] = '@class.outer',
+            },
+            goto_previous_end = {
+              ['[M'] = '@function.outer',
+              ['[]'] = '@class.outer',
+            },
+          },
+          swap = {
+            enable = true,
+            swap_next = {
+              ['<leader>a'] = '@parameter.inner',
+            },
+            swap_previous = {
+              ['<leader>A'] = '@parameter.inner',
+            },
+          },
+        },
+      }
+    '';
+    
+    plugins = with pkgs.vimPlugins; [
+      # Core functionality
+      lazy-nvim
+      
+      # LSP and completion
+      nvim-lspconfig
+      nvim-cmp
+      cmp-nvim-lsp
+      cmp-buffer
+      cmp-path
+      cmp-cmdline
+      luasnip
+      cmp_luasnip
+      friendly-snippets
+      
+      # Treesitter
+      (nvim-treesitter.withPlugins (p: [
+        p.tree-sitter-c
+        p.tree-sitter-cpp
+        p.tree-sitter-go
+        p.tree-sitter-lua
+        p.tree-sitter-python
+        p.tree-sitter-rust
+        p.tree-sitter-tsx
+        p.tree-sitter-typescript
+        p.tree-sitter-vimdoc
+        p.tree-sitter-vim
+        p.tree-sitter-bash
+        p.tree-sitter-nix
+        p.tree-sitter-json
+        p.tree-sitter-yaml
+        p.tree-sitter-toml
+        p.tree-sitter-html
+        p.tree-sitter-css
+        p.tree-sitter-javascript
+        p.tree-sitter-markdown
+      ]))
+      nvim-treesitter-textobjects
+      
+      # Telescope
+      telescope-nvim
+      telescope-fzf-native-nvim
+      
+      # UI enhancements
+      lualine-nvim
+      nvim-web-devicons
+      indent-blankline-nvim
+      gitsigns-nvim
+      
+      # Color schemes
+      tokyonight-nvim
+      gruvbox-material
+      catppuccin-nvim
+      
+      # Navigation
+      nvim-tree-lua
+      harpoon
+      
+      # Git integration
+      vim-fugitive
+      vim-rhubarb
+      
+      # Language specific
+      vim-nix
+      rust-vim
+      
+      # Utilities
+      which-key-nvim
+      comment-nvim
+      nvim-autopairs
+      todo-comments-nvim
+      trouble-nvim
+      
+      # Debug adapter
+      nvim-dap
+      nvim-dap-ui
+      nvim-dap-virtual-text
+    ];
   };
   
   # VS Code
