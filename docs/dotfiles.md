@@ -114,6 +114,7 @@ For testing configurations outside of Home Manager:
 - **Telescope** for fuzzy finding files, grep, and more
 - **Treesitter** for syntax highlighting and text objects
 - **Completion** with nvim-cmp and LuaSnip
+- **Navigation** with Harpoon2 for quick file switching
 - **Git integration** with Fugitive and Gitsigns
 - **UI enhancements** with Lualine, indent guides, and multiple colorschemes
 - **Debug support** with nvim-dap

@@ -507,17 +507,21 @@
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
       
-      -- Harpoon setup
-      local mark = require("harpoon.mark")
-      local ui = require("harpoon.ui")
+      -- Harpoon 2 setup
+      local harpoon = require("harpoon")
+      harpoon:setup()
       
-      vim.keymap.set("n", "<leader>a", mark.add_file, { desc = "Harpoon: Add file" })
-      vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu, { desc = "Harpoon: Quick menu" })
+      vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end, { desc = "Harpoon: Add file" })
+      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon: Quick menu" })
       
-      vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end, { desc = "Harpoon: File 1" })
-      vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end, { desc = "Harpoon: File 2" })
-      vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end, { desc = "Harpoon: File 3" })
-      vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end, { desc = "Harpoon: File 4" })
+      vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end, { desc = "Harpoon: File 1" })
+      vim.keymap.set("n", "<C-t>", function() harpoon:list():select(2) end, { desc = "Harpoon: File 2" })
+      vim.keymap.set("n", "<C-n>", function() harpoon:list():select(3) end, { desc = "Harpoon: File 3" })
+      vim.keymap.set("n", "<C-s>", function() harpoon:list():select(4) end, { desc = "Harpoon: File 4" })
+      
+      -- Toggle previous & next buffers stored within Harpoon list
+      vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end, { desc = "Harpoon: Previous" })
+      vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end, { desc = "Harpoon: Next" })
       
       -- Tree-sitter configuration
       require('nvim-treesitter.configs').setup {
@@ -636,7 +640,7 @@
       
       # Navigation
       nvim-tree-lua
-      harpoon
+      harpoon2
       
       # Git integration
       vim-fugitive
