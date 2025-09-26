@@ -23,3 +23,5 @@ hosts/*/hardware-configuration.nix
 # Temporary files
 *.tmp
 .direnv/
+
+.claude/*

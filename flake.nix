@@ -73,12 +73,12 @@
       };
       
       darwinConfigurations = {
-        # Mac M2 configuration
-        mac-m2 = darwin.lib.darwinSystem {
+        # Labtop (Mac M2) configuration
+        labtop = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = { inherit inputs; };
           modules = [
-            ./hosts/mac-m2/configuration.nix
+            ./hosts/labtop/configuration.nix
             home-manager.darwinModules.home-manager
             {
               home-manager = {

@@ -91,11 +91,45 @@
     ];
     
     casks = [
-      "visual-studio-code"
-      "docker"
-      "firefox"
+      "blender"
+      "discord"
+      "ghostty"
+      "itsycal"
+      "ngrok"
+      "openscad"
+      "orbstack"
+      "qlcolorcode"
+      "qlmarkdown"
+      "qlstephen"
+      "quicklook-json"
       "slack"
       "spotify"
+      "stats"
+      "sublime-text"
+      "transmission"
+      "vlc"
+      "webpquicklook"
+    ];
+    
+    # Formulas - CLI tools that don't have good nix packages or require special config
+    brews = [
+      "awscli"
+      "cocoapods"
+      "dfu-util"
+      "hackrf"
+      "hcloud"
+      "mosquitto"
+      "nvm"
+      "pyenv"
+      "rbenv"
+      "riscv-gnu-toolchain"
+      "riscv-isa-sim"
+      "riscv-pk"
+      "riscv-tools"
+      "sqld"
+      "tea"
+      "turso"
+      "wifi-password"
     ];
     
     masApps = {
