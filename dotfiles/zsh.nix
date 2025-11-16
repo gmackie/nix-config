@@ -167,7 +167,4 @@
     zsh-fast-syntax-highlighting
     zsh-completions
   ];
-
-  # Ensure oh-my-zsh custom directory exists
-  home.file.".config/oh-my-zsh/.keep".text = "";
 }
