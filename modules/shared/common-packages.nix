@@ -6,7 +6,13 @@
     git
     gh
     lazygit
-    
+
+    # AI Development tools
+    cursor
+    cursor-cli
+    codex
+    gemini-cli
+
     # Terminal utilities
     tmux
     zellij
@@ -20,7 +26,7 @@
     du-dust
     procs
     bottom
-    
+
     # Development tools
     nodejs
     yarn

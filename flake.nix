@@ -54,18 +54,25 @@
           user = "mackieg";
           wsl = true;
         };
-        
+
+        # Homelab NUC configuration
+        homelab = mkSystem "homelab" {
+          system = "x86_64-linux";
+          user = "mackieg";
+        };
+
+        # Van NUC server configuration (24/7 with Starlink at 192.168.0.72)
+        vanuc = mkSystem "vanuc" {
+          system = "x86_64-linux";
+          user = "mackieg";
+        };
+
         # Future homelab configurations
         # rpi = mkSystem "rpi" {
         #   system = "aarch64-linux";
         #   user = "mackieg";
         # };
-        
-        # nuc = mkSystem "nuc" {
-        #   system = "x86_64-linux";
-        #   user = "mackieg";
-        # };
-        
+
         # nas = mkSystem "nas" {
         #   system = "x86_64-linux";
         #   user = "mackieg";

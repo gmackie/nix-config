@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix # You'll need to generate this with nixos-generate-config
+    ../../modules/shared/common-packages.nix
     ../../modules/nixos/common.nix
     ../../modules/nixos/desktop.nix
     ../../modules/nixos/laptop.nix

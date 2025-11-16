@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../../modules/shared/common-packages.nix
     ../../modules/nixos/common.nix
     ../../modules/nixos/docker.nix
   ];
