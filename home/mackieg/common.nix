@@ -1,6 +1,11 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ../../dotfiles/zsh.nix
+    ../../dotfiles/tmux.nix
+  ];
+
   # Enable home-manager
   programs.home-manager.enable = true;
   
