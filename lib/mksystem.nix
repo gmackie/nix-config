@@ -38,5 +38,6 @@ systemFunc rec {
     {
       networking.hostName = name;
     }
-  ] ++ (if wsl then [ inputs.nixos-wsl.nixosModules.wsl ] else []);
+  ] ++ (if wsl then [ inputs.nixos-wsl.nixosModules.wsl ] else [])
+    ++ (if !darwin then [ inputs.sops-nix.nixosModules.sops ] else []);
 }

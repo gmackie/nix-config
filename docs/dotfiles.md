@@ -6,12 +6,12 @@ This nix-config repository includes comprehensive dotfiles management, integrati
 
 ```
 dotfiles/
-├── config/
-│   └── nvim/           # Neovim config (git submodule)
-├── oh-my-zsh/          # Oh My Zsh with customizations (git submodule)
+├── tmux/               # Oh My Tmux (git submodule - gpakosz/.tmux)
 ├── p10k.zsh            # Powerlevel10k configuration
-├── screenrc            # GNU Screen configuration
-└── taskrc              # Taskwarrior configuration
+├── tmux.conf.local     # Local tmux customizations
+├── zsh.nix             # Zsh configuration (Nix module)
+├── tmux.nix            # Tmux settings (Nix module)
+└── git.nix             # Git configuration (Nix module)
 ```
 
 ## Configuration Management
@@ -23,7 +23,7 @@ These are configured directly in `home/mackieg/common.nix`:
 - **Git**: Complete git configuration with aliases, colors, and LFS support
 - **Zsh**: Shell configuration with Powerlevel10k, aliases, and completion
 - **Neovim**: Full IDE setup with LSP, Telescope, Treesitter, and more
-- **Tmux**: Terminal multiplexer with custom keybindings
+- **Tmux**: Terminal multiplexer with Oh My Tmux
 - **Direnv**: Automatic environment loading
 - **FZF**: Fuzzy finder integration
 - **Starship**: Cross-shell prompt (alternative to p10k)
@@ -32,16 +32,14 @@ These are configured directly in `home/mackieg/common.nix`:
 
 These are managed as git submodules for complex configurations:
 
-- **dotfiles/config/nvim**: Your Neovim configuration (kickstart.nvim fork)
-- **dotfiles/oh-my-zsh**: Customized Oh My Zsh installation
+- **dotfiles/tmux**: Oh My Tmux configuration (gpakosz/.tmux)
 
 ### File-Based Configs
 
-Simple configuration files copied from your original dotfiles:
+Simple configuration files:
 
 - **dotfiles/p10k.zsh**: Powerlevel10k theme configuration
-- **dotfiles/screenrc**: GNU Screen settings
-- **dotfiles/taskrc**: Taskwarrior configuration
+- **dotfiles/tmux.conf.local**: Local tmux customizations
 
 ## Usage
 
@@ -62,17 +60,17 @@ home-manager switch --flake .#mackieg@nixos-laptop
 Use the dotfiles script to manage git submodules:
 
 ```bash
+# Initialize submodules (after fresh clone)
+./scripts/dotfiles.sh init
+
 # Update all submodules to latest
 ./scripts/dotfiles.sh update
 
 # Check submodule status
 ./scripts/dotfiles.sh status
 
-# Sync changes from submodules
-./scripts/dotfiles.sh sync
-
-# Push changes to submodule repositories
-./scripts/dotfiles.sh push
+# Pull latest from submodule remotes
+./scripts/dotfiles.sh pull
 ```
 
 ### Manual Testing
@@ -100,7 +98,7 @@ For testing configurations outside of Home Manager:
 
 ### Zsh Configuration
 - **Powerlevel10k** theme with your custom p10k.zsh
-- **Oh My Zsh** with plugins: git, docker, kubectl, aws, rust, golang, python, nodejs
+- **Oh My Zsh** plugins via nixpkgs: git, docker, kubectl, aws, rust, golang, python, nodejs
 - **Auto-suggestions** and **syntax highlighting**
 - **Enhanced aliases** using modern tools (eza, bat, rg, fd, etc.)
 - **Nix shortcuts** (nrs, nrb, hms, nfu, nfc, nfs)
@@ -121,11 +119,10 @@ For testing configurations outside of Home Manager:
 - **Comprehensive keybindings** following modern Neovim conventions
 
 ### Tmux Configuration
+- **Oh My Tmux** (gpakosz/.tmux) as base configuration
+- **Local customizations** in tmux.conf.local
 - **Vi-style keybindings**
 - **Mouse support** enabled
-- **Custom split shortcuts** (| and -)
-- **Pane navigation** with Alt+arrow keys
-- **History limit** of 10,000 lines
 - **256-color support**
 
 ## Adding Custom Configurations
@@ -141,12 +138,12 @@ home.file.".myconfig".source = ../dotfiles/myconfig;
 Add as a submodule:
 
 ```bash
-git submodule add https://github.com/user/repo.git dotfiles/config/myapp
+git submodule add https://github.com/user/repo.git dotfiles/myrepo
 ```
 
 Then reference in `common.nix`:
 ```nix
-xdg.configFile.myapp.source = ../dotfiles/config/myapp;
+xdg.configFile.myapp.source = ../dotfiles/myrepo;
 ```
 
 ### For Nix-Managed Programs
@@ -171,9 +168,9 @@ programs.myprogram = {
 
 ## Migration Notes
 
-- **Vim config ignored**: Using Neovim instead (your vim config remains in dotfiles for reference)
-- **Git config updated**: Added modern settings like `zdiff3` merge style
-- **Zsh plugins**: Converted from oh-my-zsh plugins to nix-managed where possible
+- **Zsh plugins**: Managed through Nix packages instead of oh-my-zsh submodule
+- **Neovim config**: Planned to use a kickstart.nvim-style submodule in future
+- **Git config**: Added modern settings like `zdiff3` merge style
 - **Path management**: Handled through Nix and sessionVariables instead of manual exports
 
 ## Troubleshooting
@@ -183,13 +180,6 @@ programs.myprogram = {
 # Reset submodules
 git submodule foreach --recursive git clean -fd
 git submodule update --init --recursive --force
-
-# Update specific submodule
-cd dotfiles/config/nvim
-git pull origin main
-cd ../../..
-git add dotfiles/config/nvim
-git commit -m "Update nvim submodule"
 ```
 
 ### Configuration Conflicts

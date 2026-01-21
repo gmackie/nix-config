@@ -1,28 +1,32 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Age - modern encryption tool
+  # Encryption tools
   environment.systemPackages = with pkgs; [
     age
     age-plugin-yubikey
     sops
     ssh-to-age
   ];
-  
-  # Create directory for secrets
-  systemd.tmpfiles.rules = [
-    "d /run/secrets 0755 root root -"
-  ];
-  
+
   # SOPS configuration
-  # To use:
-  # 1. Create .sops.yaml in repo root
-  # 2. Add your age public key
-  # 3. Encrypt secrets with: sops secrets/example.yaml
-  # 4. Import in configuration with sops-nix module
-  
-  # Example .sops.yaml:
-  # creation_rules:
-  #   - path_regex: secrets/.*\.yaml$
-  #     age: age1your_public_key_here
+  # The sops-nix module is imported via lib/mksystem.nix
+  sops = {
+    # Default age key location
+    age.keyFile = "/var/lib/sops-nix/key.txt";
+
+    # Don't generate key automatically - we manage keys manually
+    age.generateKey = false;
+
+    # Default secrets file (can be overridden per-secret)
+    defaultSopsFile = ../../secrets/secrets.yaml;
+
+    # Default format
+    defaultSopsFormat = "yaml";
+  };
+
+  # Ensure the sops key directory exists with correct permissions
+  systemd.tmpfiles.rules = [
+    "d /var/lib/sops-nix 0700 root root -"
+  ];
 }

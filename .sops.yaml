@@ -1,27 +1,51 @@
 # SOPS configuration for secret management
-# 
+#
 # Setup:
 # 1. Generate an age key: age-keygen -o ~/.config/sops/age/keys.txt
 # 2. Get your public key from the generated file
 # 3. Replace the example key below with your public key
-# 4. Encrypt secrets: sops secrets/example.yaml
-# 5. Edit encrypted secrets: sops secrets/example.yaml
+# 4. Encrypt secrets: sops secrets/secrets.yaml
+# 5. Edit encrypted secrets: sops secrets/secrets.yaml
+
+keys:
+  # Add your age public keys here
+  # Get key from: cat ~/.config/sops/age/keys.txt | grep "public key:"
+  - &admin age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p
 
 creation_rules:
-  # Secrets for all systems
-  - path_regex: secrets/.*\.yaml$
-    age: >-
-      age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p
-  
+  # Shared secrets for all systems
+  - path_regex: secrets/secrets\.yaml$
+    key_groups:
+      - age:
+          - *admin
+
   # Host-specific secrets
+  - path_regex: secrets/hosts/brnr/.*\.yaml$
+    key_groups:
+      - age:
+          - *admin
+
+  - path_regex: secrets/hosts/homelab/.*\.yaml$
+    key_groups:
+      - age:
+          - *admin
+
+  - path_regex: secrets/hosts/vanuc/.*\.yaml$
+    key_groups:
+      - age:
+          - *admin
+
   - path_regex: secrets/hosts/nixos-laptop/.*\.yaml$
-    age: >-
-      age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p
-  
+    key_groups:
+      - age:
+          - *admin
+
   - path_regex: secrets/hosts/wsl/.*\.yaml$
-    age: >-
-      age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p
-  
-  - path_regex: secrets/hosts/mac-m2/.*\.yaml$
-    age: >-
-      age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p
+    key_groups:
+      - age:
+          - *admin
+
+  - path_regex: secrets/hosts/labtop/.*\.yaml$
+    key_groups:
+      - age:
+          - *admin

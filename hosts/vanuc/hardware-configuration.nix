@@ -1,0 +1,41 @@
+# PLACEHOLDER: Generate this file on the actual hardware
+#
+# Run the following command on the target machine:
+#   sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
+#
+# Or during installation (as described in README.md):
+#   sudo nixos-generate-config --root /mnt
+#   sudo cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/nix-config/hosts/vanuc/
+#
+# This file should contain:
+# - File system mounts
+# - Swap devices
+# - Hardware-specific kernel modules
+# - CPU microcode updates
+
+{ config, lib, pkgs, modulesPath, ... }:
+
+{
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
+
+  # TODO: Replace with actual hardware configuration from Van NUC
+  # boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" ];
+  # boot.kernelModules = [ "kvm-intel" ];
+
+  # fileSystems."/" = {
+  #   device = "/dev/disk/by-uuid/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX";
+  #   fsType = "ext4";
+  # };
+
+  # fileSystems."/boot" = {
+  #   device = "/dev/disk/by-uuid/XXXX-XXXX";
+  #   fsType = "vfat";
+  # };
+
+  # swapDevices = [ ];
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+}

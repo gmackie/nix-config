@@ -19,9 +19,14 @@
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, darwin, home-manager, nixos-wsl, ... }@inputs: 
+  outputs = { self, nixpkgs, nixpkgs-stable, darwin, home-manager, nixos-wsl, sops-nix, ... }@inputs: 
     let
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
