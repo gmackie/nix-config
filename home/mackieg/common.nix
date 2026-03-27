@@ -1,9 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [
     ../../dotfiles/zsh.nix
     ../../dotfiles/tmux.nix
+    ../../modules/home-manager/agent-skills.nix
   ];
 
   # Enable home-manager

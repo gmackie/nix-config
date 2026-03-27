@@ -110,6 +110,27 @@ To add a new system (e.g., Raspberry Pi):
 - **Flakes**: Reproducible builds with pinned dependencies
 - **Dotfiles Integration**: Git submodules for complex configs, Nix for simple ones
 - **Organized Structure**: Clear separation of concerns
+- **Agent Skills Integration**: Consumes the local `agent-skills` flake and can later layer in `agent-skills-private`
+
+## Agent Skills
+
+This repo now consumes the local public skills repo as a flake input:
+
+- `agent-skills = path:/Volumes/dev/agent-skills`
+
+The Home Manager wrapper lives at:
+
+- `modules/home-manager/agent-skills.nix`
+
+It imports the public repo's `homeManagerModules.default` and will also import
+`agent-skills-private` automatically once that flake input is added to this repo.
+
+Current integration point:
+
+- `home/mackieg/common.nix`
+
+This keeps public skills, tools, and agent definitions available declaratively
+through the same Home Manager configuration used for the rest of the machine.
 
 ## Customization
 

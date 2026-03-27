@@ -1,4 +1,4 @@
 {
   # Export home-manager modules
-  # Add custom home-manager modules here
+  agent-skills = import ./agent-skills.nix;
 }

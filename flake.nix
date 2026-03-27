@@ -14,6 +14,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    agent-skills.url = "github:gmackie/agent-skills";
     
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
