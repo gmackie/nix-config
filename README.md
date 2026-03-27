@@ -110,20 +110,21 @@ To add a new system (e.g., Raspberry Pi):
 - **Flakes**: Reproducible builds with pinned dependencies
 - **Dotfiles Integration**: Git submodules for complex configs, Nix for simple ones
 - **Organized Structure**: Clear separation of concerns
-- **Agent Skills Integration**: Consumes the local `agent-skills` flake and can later layer in `agent-skills-private`
+- **Agent Skills Integration**: Consumes the published public and private skills flakes through Home Manager
 
 ## Agent Skills
 
-This repo now consumes the local public skills repo as a flake input:
+This repo now consumes the published skills repos as flake inputs:
 
-- `agent-skills = path:/Volumes/dev/agent-skills`
+- `agent-skills = github:gmackie/agent-skills`
+- `agent-skills-private = git+ssh://git@github.com/gmackie/agent-skills-private?ref=main`
 
 The Home Manager wrapper lives at:
 
 - `modules/home-manager/agent-skills.nix`
 
-It imports the public repo's `homeManagerModules.default` and will also import
-`agent-skills-private` automatically once that flake input is added to this repo.
+It imports the public repo's `homeManagerModules.default` and the private repo's
+matching module automatically when that input is available.
 
 Current integration point:
 

@@ -16,6 +16,7 @@
     };
 
     agent-skills.url = "github:gmackie/agent-skills";
+    agent-skills-private.url = "git+ssh://git@github.com/gmackie/agent-skills-private?ref=main";
     
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";

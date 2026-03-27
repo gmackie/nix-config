@@ -19,6 +19,26 @@
         "type": "github"
       }
     },
+    "agent-skills-private": {
+      "inputs": {
+        "home-manager": "home-manager_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1774617914,
+        "narHash": "sha256-+ri801+8jzO08mHRat6fiK4beTISfNXuLDzEMwd0W20=",
+        "ref": "main",
+        "rev": "42c89efc5b3989b2816461596f8f466d61f1bafc",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/gmackie/agent-skills-private"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "ssh://git@github.com/gmackie/agent-skills-private"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -77,6 +97,27 @@
       }
     },
     "home-manager_2": {
+      "inputs": {
+        "nixpkgs": [
+          "agent-skills-private",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1774550169,
+        "narHash": "sha256-cLcm8jXyhEDRHTCN1fym6+5L6Z264kj2QBpL+/yT3WI=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "7622882af88598b882436416bd74154826fcf742",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "home-manager_3": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -151,6 +192,22 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1774273680,
+        "narHash": "sha256-a++tZ1RQsDb1I0NHrFwdGuRlR5TORvCEUksM459wKUA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fdc7b8f7b30fdbedec91b71ed82f36e1637483ed",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1755615617,
         "narHash": "sha256-HMwfAJBdrr8wXAkbGhtcby1zGFvs+StOp19xNsbqdOg=",
         "owner": "NixOS",
@@ -168,10 +225,11 @@
     "root": {
       "inputs": {
         "agent-skills": "agent-skills",
+        "agent-skills-private": "agent-skills-private",
         "darwin": "darwin",
-        "home-manager": "home-manager_2",
+        "home-manager": "home-manager_3",
         "nixos-wsl": "nixos-wsl",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_3",
         "nixpkgs-stable": "nixpkgs-stable"
       }
     }
